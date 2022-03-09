@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"strings"
+	"strconv"
 )
 
 var bookingName = "Rub Booking"
@@ -10,7 +10,7 @@ var bookingName = "Rub Booking"
 const numTickets uint = 50
 
 var remainingTickets uint = 50
-var bookings = []string{}
+var bookings = make([]map[string]string, 0)
 
 func main() {
 
@@ -55,8 +55,8 @@ func greetUsers() {
 func printFirstNames() []string {
 	firstNames := []string{}
 	for _, booking := range bookings {
-		var names = strings.Fields(booking)
-		firstNames = append(firstNames, names[0])
+		var name = booking["firstName"]
+		firstNames = append(firstNames, name)
 	}
 	return firstNames
 }
@@ -79,7 +79,16 @@ func getUserInput() (string, string, string, uint) {
 
 func bookTickets(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets -= userTickets
-	bookings = append(bookings, firstName+" "+lastName)
+
+	// Create a user map
+	var userData = make(map[string]string)
+	userData["firstName"] = firstName
+	userData["lastName"] = lastName
+	userData["email"] = email
+	userData["numTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+
+	bookings = append(bookings, userData)
+	fmt.Printf("List of bookings:\n %v", bookings)
 
 	fmt.Printf("Ordering %v tickets for %v %v. Order confirmation sent to %v\n", userTickets, firstName, lastName, email)
 	fmt.Printf("%v tickets remaining\n", remainingTickets)
