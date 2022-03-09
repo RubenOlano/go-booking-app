@@ -1,16 +1,20 @@
 package main
 
-import (
-	"fmt"
-	"strconv"
-)
+import "fmt"
 
 var bookingName = "Rub Booking"
 
 const numTickets uint = 50
 
 var remainingTickets uint = 50
-var bookings = make([]map[string]string, 0)
+var bookings = make([]UserData, 0)
+
+type UserData struct {
+	firstName       string
+	lastName        string
+	email           string
+	numberOfTickets uint
+}
 
 func main() {
 
@@ -55,7 +59,7 @@ func greetUsers() {
 func printFirstNames() []string {
 	firstNames := []string{}
 	for _, booking := range bookings {
-		var name = booking["firstName"]
+		var name = booking.firstName
 		firstNames = append(firstNames, name)
 	}
 	return firstNames
@@ -81,11 +85,12 @@ func bookTickets(userTickets uint, firstName string, lastName string, email stri
 	remainingTickets -= userTickets
 
 	// Create a user map
-	var userData = make(map[string]string)
-	userData["firstName"] = firstName
-	userData["lastName"] = lastName
-	userData["email"] = email
-	userData["numTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+	var userData = UserData{
+		firstName:       firstName,
+		lastName:        lastName,
+		email:           email,
+		numberOfTickets: numTickets,
+	}
 
 	bookings = append(bookings, userData)
 	fmt.Printf("List of bookings:\n %v", bookings)
